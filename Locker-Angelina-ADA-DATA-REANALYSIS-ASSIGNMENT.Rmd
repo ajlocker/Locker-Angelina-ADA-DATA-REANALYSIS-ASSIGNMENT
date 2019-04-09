@@ -140,7 +140,7 @@ SrShapiro
 ```
 
 
-Table 3. Canines and Molars (Repeat code from Table 2. However, use the Average.d18o.Canines and Average.d18o.Molars columns from the dataset)
+Table 3. Canines and Molars (Repeat code from Table 2. However, use the Average.d18o.Canines and Average.d18o.Molars columns from the dataset). Wright did not specify how she calculated Local, so I left those stats out for the sake of time. 
 
 ![Table 4 - Wright (2012)](Img/Table3.png)
 
