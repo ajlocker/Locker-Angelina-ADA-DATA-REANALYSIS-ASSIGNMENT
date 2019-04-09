@@ -2,7 +2,9 @@
 title: "Locker-Angelina-ADA-Data-Reanalysis"
 author: "Angelina Locker"
 date: "April 4, 2019"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -173,48 +175,61 @@ OShapiro
 ```
 Fig. 4 is two histograms comparing the distributions of averages of d18O from canines and molars with a normal distribution line plotted over them. 
 
+
 ```{r}
 
-ggplot(data = d, aes(d$Average.18O.canines, na.rm = TRUE)) + 
-  geom_histogram(aes(y = ..density..),
-                 na.rm = TRUE, 
-                 breaks = seq(0, 12, by = 0.5),
-                 col = "red",
-                 fill = "red") +
+ggplot(data = d, aes(d$Average.18O.canines)) + 
+  geom_histogram(na.rm = TRUE,
+                 breaks = seq(-7, 0, by = 0.5),
+                 binwidth = 0.5,
+                 bins = 15,
+                 col = "blue",
+                 fill = "red", 
+                 probability = TRUE) +
+  geom_density(col= "green") +
   labs(x = "Canine Average"~delta*'18O(\u2030PDB)', y = "Frequency") +
-  xlim(c(-7.0, -1.0)) + 
+  xlim(c(-7.0, 0.0)) + 
   ylim(c(0,20)) 
 
-ggplot(data = d, aes(d$Average.18O.molars, na.rm = TRUE)) + 
-  geom_histogram(aes(y = ..density..), 
-                 na.rm = TRUE, 
-                 breaks = seq(0, 12, by = 0.5),
-                 col = "red",
-                 fill = "red") +
+ggplot(data = d, aes(d$Average.18O.molars)) + 
+  geom_histogram(na.rm = TRUE,
+                 breaks = seq(-7, 0, by = 0.5),
+                 binwidth = 0.5,
+                 bins = 10,
+                 col = "blue",
+                 fill = "red",
+                 probability = TRUE) +
+  geom_density(col="green") +
   labs(x = "Third Molar Average"~delta*'18O(\u2030PDB)', y = "Frequency") +
-  xlim(c(-7.0, -1.0)) + 
+  xlim(c(-7.0, 0.0)) + 
   ylim(c(0,12))
 
 
 
 ```
 
-Fig. 5 = QQ Plots of oxygen isotope data. 
+Fig. 5 = QQ Plots of oxygen isotope data using {ggplot2}
+
+df <- data.frame(y = rt(200, df = 5))
+p <- ggplot(df, aes(sample = y))
+p + stat_qq() + stat_qq_line()
 
 ```{r}
-par(mfrow = c(1,2))
-qqnorm(d$Average.18O.canines) #QQ plots are used to for a normal distribution. Wright's axes are switched.
-qqline(d$Average.18O.canines)
 
-qqnorm(d$Average.18O.molars)
-qqline(d$Average.18O.molars)
+qc <- ggplot(d, aes(sample = d$Average.18O.canines)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(title = "Canine QQ")
+
+qm <- ggplot(d, aes(sample = d$Average.18O.molars)) +
+  stat_qq() +
+  stat_qq_line() +
+  labs(title = "Molars QQ")
+
+qc
+qm
 ```
 
-library(ggplot2) 
-ggplot(mtcars, aes(x=hp, y=mpg)) + 
-  geom_point() + 
-  geom_point(aes(y=qsec), color="red") 
-  
 Fig. 6
 ```{r}
 
@@ -236,9 +251,9 @@ Summary statistics using {dplyr}: summarise(), filter(), %>%
 
 Data Normality Checks: Shapiro.Wilks Testing, Skewness, Kurtosis, QQ Plots
 
-Plotting basic histograms: hist ()
+Plotting histograms with normal distribution lines usins {ggplot2}: ggplot(data = , aes(x,y)) + geom_histogram + geom_density()...
 
-Adding normal distribution line to histogram
+Plotting QQ plots with {ggplot2}: ggplot(data = , aes(sample = )) + stat_qq() + stat_qq_line() + labs()...
 
 Generating a scatterplot with {ggplot2}: ggplot(data = , aes(x, y)) + geom_point + xlab + ylab...
 
@@ -252,7 +267,7 @@ dplyr cheatsheet: https://www.rstudio.com/resources/cheatsheets/
 ggplot2 cheatsheet: https://www.rstudio.com/resources/cheatsheets/
 
 Kabacoff, Robert I.2011. *R in Action: Data Analysis and Graphics with R* Manning Publications: Shelter Island, NY.    
-
+https://ggplot2.tidyverse.org/reference/geom_qq.html
 
 
 
