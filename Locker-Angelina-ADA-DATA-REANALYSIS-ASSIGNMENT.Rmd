@@ -65,9 +65,9 @@ srp  # and, finally, we plot the object
 ```
 
 
-Next, I examine the destriptive statistics for strontium isotope ratios and oxygen isotope ratios. Wright provides three columns in her tables. 1 column lists all of the included data  points ("Complete"), the second removes obvious geologically distant samples ("Trimmed"), and the third further removes outliers ("Local"), such that the population distribution becomes a normal distribution when the Shapiro-Wilks test is completed.
+Next, I examine the destriptive statistics for strontium isotope ratios and oxygen isotope ratios. Wright provides three columns in her tables. The first column lists all of the included data  points ("Complete"), the second removes obvious geologically distant samples ("Trimmed"), and the third further removes outliers ("Local"), such that the population distribution becomes a normal distribution when the Shapiro-Wilks test is completed. I completed the first ("Complete") and third ("Local") columns for her descriptive statistics. She did not specify which outliers she removed for the Trimmed, but did specify the parameters for the Local. 
 
-To generate Table 2. we need to create multiple piplines using the %>% function. To get started (install if necessary and) load the {dplyr},{tidyverse}, and {e1071} packages. 
+To generate Table 2. we need to create multiple piplines using the %>% function. To get started (install if necessary and) load the {dplyr},{tidyverse}, and {e1071} packages. Eacy of these packages will help with descriptive stats. {dplyr} allows pipelines to be created to stream the data together in a single file. {e1071} carries the skewness and kurtosis statistics. 
 ```{r}
 library(dplyr)
 library(tidyverse)
@@ -116,6 +116,7 @@ SrStats
 
 ```
 
+I couldn't figure out how to sync up my dplyr tables with the Shapiro-Wilk test, so I'm just doing them separately. Sorry!
 
 ```{r}
 
@@ -130,43 +131,42 @@ SrShapiro
 ```
 
 
-Table 3. Canines (Repeat code from Table 2. However, use the Average.d18o.Canines column from the dataset)
+Table 3. Canines and Molars (Repeat code from Table 2. However, use the Average.d18o.Canines and Average.d18o.Molars columns from the dataset)
 ```{r}
 CaninesComplete <- d %>%
-  select(Average.d18O.canines) %>%
-  summarise(mean = mean(Average.d18O.canines, na.rm = TRUE),
-            sd = sd(Average.d18O.canines, na.rm = TRUE),
-            count = length(na.omit(Average.d18O.canines)),
-            min = min(Average.d18O.canines, na.rm = TRUE), 
-            max = max(Average.d18O.canines, na.rm = TRUE),
-            CV = sd(Average.d18O.canines, na.rm = TRUE)/ mean(Average.d18O.canines, na.rm = TRUE),
-            skewness = skewness(Average.d18O.canines, na.rm = TRUE, type = 3),
-            kurtosis = kurtosis(Average.d18O.canines, na.rm = TRUE, type = 3), 
-            median = median(Average.d18O.canines, na.rm = TRUE),
-            O_Mode = Mode(Average.d18O.canines))
+  select(Average.18O.canines) %>%
+  summarise(mean = mean(Average.18O.canines, na.rm = TRUE),
+            sd = sd(Average.18O.canines, na.rm = TRUE),
+            count = length(na.omit(Average.18O.canines)),
+            min = min(Average.18O.canines, na.rm = TRUE), 
+            max = max(Average.18O.canines, na.rm = TRUE),
+            CV = sd(Average.18O.canines, na.rm = TRUE)/ mean(Average.18O.canines, na.rm = TRUE),
+            skewness = skewness(Average.18O.canines, na.rm = TRUE, type = 3),
+            kurtosis = kurtosis(Average.18O.canines, na.rm = TRUE, type = 3), 
+            median = median(Average.18O.canines, na.rm = TRUE),
+            O_Mode = Mode(Average.18O.canines))
 
 MolarsComplete <- d %>%
-  select(Average.d18O.molars) %>%
-  summarise(mean = mean(Average.d18O.molars, na.rm = TRUE),
-            sd = sd(Average.d18O.molars, na.rm = TRUE),
-            count = length(na.omit(Average.d18O.molars)),
-            min = min(Average.d18O.molars, na.rm = TRUE), 
-            max = max(Average.d18O.molars, na.rm = TRUE),
-            CV = sd(Average.d18O.molars, na.rm = TRUE)/ mean(Average.d18O.molars, na.rm = TRUE),
-            skewness = skewness(Average.d18O.molars, na.rm = TRUE, type = 3),
-            kurtosis = kurtosis(Average.d18O.molars, na.rm = TRUE, type = 3), 
-            median = median(Average.d18O.molars, na.rm = TRUE),
-            O_Mode = Mode(Average.d18O.molars))
+  select(Average.18O.molars) %>%
+  summarise(mean = mean(Average.18O.molars, na.rm = TRUE),
+            sd = sd(Average.18O.molars, na.rm = TRUE),
+            count = length(na.omit(Average.18O.molars)),
+            min = min(Average.18O.molars, na.rm = TRUE), 
+            max = max(Average.18O.molars, na.rm = TRUE),
+            CV = sd(Average.18O.molars, na.rm = TRUE)/ mean(Average.18O.molars, na.rm = TRUE),
+            skewness = skewness(Average.18O.molars, na.rm = TRUE, type = 3),
+            kurtosis = kurtosis(Average.18O.molars, na.rm = TRUE, type = 3), 
+            median = median(Average.18O.molars, na.rm = TRUE),
+            O_Mode = Mode(Average.18O.molars))
 
 OxygenStats <- rbind(CaninesComplete, MolarsComplete)
 OxygenStats
 ```
 
-I couldn't figure out how to sync up my dplyr tables with the Shapiro-Wilk test, so I'm just doing them separately. Sorry! 
 
 ```{r}
-CanineShapiro <- shapiro.test(d$Average.d18O.canines)
-MolarShapiro <- shapiro.test(d$Average.d18O.molars)
+CanineShapiro <- shapiro.test(d$Average.18O.canines)
+MolarShapiro <- shapiro.test(d$Average.18O.molars)
 OShapiro <- rbind(CanineShapiro, MolarShapiro)
 OShapiro
 
@@ -175,7 +175,7 @@ Fig. 4 is two histograms comparing the distributions of averages of d18O from ca
 
 ```{r}
 par(mfrow = c(1,2)) #aligns them into a 1 by 2 grid
-x <- d$Average.d18O.canines #I create a vetor for my data to help make the normal distribution line code easier.
+x <- d$Average.18O.canines #I create a vetor for my data to help make the normal distribution line code easier.
 mx <- mean(x, na.rm = TRUE) # I use na.rm = TRUE because my data has many missing cells for various samples
 sdx <- sd(x, na.rm = TRUE)
 hx <- hist(x, 
@@ -192,7 +192,7 @@ yfit <- dnorm(xfit, mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
 yfit <- yfit*diff(hx$mids[1:2])*length(x)
 lines(xfit, yfit, col = "blue", lwd = 2)
 
-y <- d$Average.d18O.molars
+y <- d$Average.18O.molars
 my <- mean(y)
 sdy <- sd(y)
 hy <- hist(y, 
@@ -215,23 +215,33 @@ Fig. 5 = QQ Plots of oxygen isotope data.
 
 ```{r}
 par(mfrow = c(1,2))
-qqnorm(d$Average.d18O.canines) #QQ plots are used to for a normal distribution. Wright's axes are switched.
-qqline(d$Average.d18O.canines)
+qqnorm(d$Average.18O.canines) #QQ plots are used to for a normal distribution. Wright's axes are switched.
+qqline(d$Average.18O.canines)
 
-qqnorm(d$Average.d18O.molars)
-qqline(d$Average.d18O.molars)
+qqnorm(d$Average.18O.molars)
+qqline(d$Average.18O.molars)
 ```
 
+library(ggplot2) 
+ggplot(mtcars, aes(x=hp, y=mpg)) + 
+  geom_point() + 
+  geom_point(aes(y=qsec), color="red") 
+  
 Fig. 6
 ```{r}
 
 library(ggplot2) #load in the {ggplot2} package
-sro <- ggplot(data = d, aes(x = d$X87Sr.86Sr, y = d$Average.d18O.canines)) # Data tells you which file to pull from; aes lets you set up your x,y plot.                           
-sro <- sro + xlab("87Sr/86Sr") + ylab('d18O(\u2030PDB)')  
-sro <- sro + geom_point(na.rm = TRUE)  
+sro <- ggplot(d, aes(x = d$X87Sr.86Sr, y = d$Average.18O.canines, d$Average.18O.molars), colours(distinct = TRUE)) + # Data tells you which file to pull from; aes lets you set up your x,y plot.                           
+  geom_point(na.rm = TRUE) + 
+  xlab("87Sr/86Sr") + ylab('d18O(\u2030PDB)')
 sro  # and, finally, we plot the object
 ```
 
+rubies  <- data.frame(carat = c(3, 4, 5), price= c(5000, 5000, 5000))
+
+ggplot(diamonds, aes(carat, price)) + 
+  geom_point() + 
+  geom_point(data = rubies, colour = "red")
 
 ## Summary
 Summary statistics using {dplyr}: summarise(), filter(), %>%
