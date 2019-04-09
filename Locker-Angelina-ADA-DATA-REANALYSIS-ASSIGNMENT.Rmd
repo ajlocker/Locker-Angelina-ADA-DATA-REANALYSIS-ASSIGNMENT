@@ -3,13 +3,17 @@ title: "Locker-Angelina-ADA-Data-Reanalysis"
 author: "Angelina Locker"
 date: "April 4, 2019"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+    fig.path = "img/"
+)
 ```
+
 
 ## Introduction
 
@@ -41,6 +45,7 @@ head(d)
 ## Replications/Reanalysis
 The first thing I am going to replicate is Fig. 2 in which Wright (2012) compares the Time Period (or Date) of the burials to 87Sr/86Sr. Load (and install, if necessary) the {ggplot2} package.
 
+![Fig. 2 - Wright (2012)](Img/Fig2.png)
 ```{r}
 library(ggplot2) 
 
@@ -63,17 +68,19 @@ srp <- srp + xlab("") + ylab("87Sr/86Sr")
 srp <- srp + geom_point(na.rm = TRUE)  
 srp  # and, finally, we plot the object
 
-
 ```
-
 
 Next, I examine the destriptive statistics for strontium isotope ratios and oxygen isotope ratios. Wright provides three columns in her tables. The first column lists all of the included data  points ("Complete"), the second removes obvious geologically distant samples ("Trimmed"), and the third further removes outliers ("Local"), such that the population distribution becomes a normal distribution when the Shapiro-Wilks test is completed. I completed the first ("Complete") and third ("Local") columns for her descriptive statistics. She did not specify which outliers she removed for the Trimmed, but did specify the parameters for the Local. 
 
 To generate Table 2. we need to create multiple piplines using the %>% function. To get started (install if necessary and) load the {dplyr},{tidyverse}, and {e1071} packages. Eacy of these packages will help with descriptive stats. {dplyr} allows pipelines to be created to stream the data together in a single file. {e1071} carries the skewness and kurtosis statistics. 
+
+![Table. 2 - Wright (2012)](Img/Table 2.csv)
 ```{r}
 library(dplyr)
 library(tidyverse)
 library(e1071)
+
+#The Mode() function in baseR tells you the class of an object. The get the mathematical mode (or the most frequent number), we have to create our own function: 
 
 Mode <- function(x) {
     if (is.numeric(x)) {
@@ -82,9 +89,10 @@ Mode <- function(x) {
     }
 }
 
+#Now we can build our descriptive statistics pipeline. 
 SrComplete <- d %>%
-  select(X87Sr.86Sr) %>%
-  summarise(mean = mean(X87Sr.86Sr, na.rm = TRUE),
+  select(X87Sr.86Sr) %>% #here I am telling R which column from my dataset to pull from
+  summarise(mean = mean(X87Sr.86Sr, na.rm = TRUE), #now I can go through and put in the statistical parameters I want
             sd = sd(X87Sr.86Sr, na.rm = TRUE),
             count = length(na.omit(X87Sr.86Sr)),
             min = min(X87Sr.86Sr, na.rm = TRUE), 
@@ -134,6 +142,8 @@ SrShapiro
 
 
 Table 3. Canines and Molars (Repeat code from Table 2. However, use the Average.d18o.Canines and Average.d18o.Molars columns from the dataset)
+
+![Table. 3 - Wright (2012)](Img/Table 3.csv)
 ```{r}
 CaninesComplete <- d %>%
   select(Average.18O.canines) %>%
@@ -165,7 +175,6 @@ OxygenStats <- rbind(CaninesComplete, MolarsComplete)
 OxygenStats
 ```
 
-
 ```{r}
 CanineShapiro <- shapiro.test(d$Average.18O.canines)
 MolarShapiro <- shapiro.test(d$Average.18O.molars)
@@ -173,20 +182,21 @@ OShapiro <- rbind(CanineShapiro, MolarShapiro)
 OShapiro
 
 ```
-Fig. 4 is two histograms comparing the distributions of averages of d18O from canines and molars with a normal distribution line plotted over them. 
+Fig. 4 is two histograms comparing the distributions of averages of d18O from canines and molars with a normal distribution line plotted over them. We can use {ggplot2} for shortened code. Note: I'm still not sure why my distribution lines a plotting so small.
 
 
+![Fig 4 - Wright (2012)](Img/Fig4.png)
 ```{r}
 
-ggplot(data = d, aes(d$Average.18O.canines)) + 
-  geom_histogram(na.rm = TRUE,
-                 breaks = seq(-7, 0, by = 0.5),
+ggplot(data = d, aes(d$Average.18O.canines)) + #tells us our data to pull from
+  geom_histogram(na.rm = TRUE, #which type of plot we'll be using and the parameters
+                 breaks = seq(-7, 0, by = 0.5), #I've used binwidth() and bins() along with breaks() to make my bins fall on whole numbers. If I don't use breaks() then the histogram plots on half numbers for the x-axis tick marks, rather than whole numbers. 
                  binwidth = 0.5,
                  bins = 15,
                  col = "blue",
                  fill = "red", 
-                 probability = TRUE) +
-  geom_density(col= "green") +
+                 probability = FALSE) +
+  geom_density(col= "green") + #this creates the normal distribution line. 
   labs(x = "Canine Average"~delta*'18O(\u2030PDB)', y = "Frequency") +
   xlim(c(-7.0, 0.0)) + 
   ylim(c(0,20)) 
@@ -198,9 +208,9 @@ ggplot(data = d, aes(d$Average.18O.molars)) +
                  bins = 10,
                  col = "blue",
                  fill = "red",
-                 probability = TRUE) +
+                 probability = FALSE) +
   geom_density(col="green") +
-  labs(x = "Third Molar Average"~delta*'18O(\u2030PDB)', y = "Frequency") +
+  labs(x = "Third Molar Average"~delta*'18O(\u2030PDB)', y = "Frequency") + #Note: the \u2030 is code for the permille symbol. ~delta* notes that there should be a space after "Average", then a small delta symbol with no space between it and the 18. 
   xlim(c(-7.0, 0.0)) + 
   ylim(c(0,12))
 
@@ -209,20 +219,16 @@ ggplot(data = d, aes(d$Average.18O.molars)) +
 ```
 
 Fig. 5 = QQ Plots of oxygen isotope data using {ggplot2}
-
-df <- data.frame(y = rt(200, df = 5))
-p <- ggplot(df, aes(sample = y))
-p + stat_qq() + stat_qq_line()
-
+![Fig. 5 - Wright (2012)](Img/Fig5.gif)
 ```{r}
 
-qc <- ggplot(d, aes(sample = d$Average.18O.canines)) +
-  stat_qq() +
-  stat_qq_line() +
+qc <- ggplot(d, aes(sample = d$Average.18O.canines)) + #tells us which data to pull from
+  stat_qq(na.rm = TRUE) + #type of plot
+  stat_qq_line() + #adds the expected line
   labs(title = "Canine QQ")
 
 qm <- ggplot(d, aes(sample = d$Average.18O.molars)) +
-  stat_qq() +
+  stat_qq(na.rm = TRUE) +
   stat_qq_line() +
   labs(title = "Molars QQ")
 
@@ -230,14 +236,17 @@ qc
 qm
 ```
 
-Fig. 6
+Fig. 6 Finally, We will plot a multivariate scatterplot comparing strontium isotope ratios to oxygen isotope ratios using {ggplot2}
+
+![Fig. 6 - Wright (2012)](Img/Fig6.gif)
+
 ```{r}
 
 library(ggplot2) #load in the {ggplot2} package
 sro <- ggplot(d, aes(x = d$X87Sr.86Sr, y = d$Average.18O.canines, d$Average.18O.molars), colours(distinct = TRUE)) + # Data tells you which file to pull from; aes lets you set up your x,y plot.                           
   geom_point(na.rm = TRUE) + 
   xlab("87Sr/86Sr") + ylab('d18O(\u2030PDB)')
-sro  # and, finally, we plot the object
+sro  # and, finally, we plot
 ```
 
 ## Summary
@@ -254,20 +263,19 @@ Generating a scatterplot with {ggplot2}: ggplot(data = , aes(x, y)) + geom_point
 
 ## References
 
-https://blog.exploratory.io/filter-data-with-dplyr-76cf5f1a258e
+#Cheatsheet for R are probably the best think in my life these days...
 
 dplyr cheatsheet: https://www.rstudio.com/resources/cheatsheets/
 
 ggplot2 cheatsheet: https://www.rstudio.com/resources/cheatsheets/
 
-Kabacoff, Robert I.2011. *R in Action: Data Analysis and Graphics with R* Manning Publications: Shelter Island, NY.    
+R Markdown Cheatsheet: https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf
+
 https://ggplot2.tidyverse.org/reference/geom_qq.html
 
+https://blog.exploratory.io/filter-data-with-dplyr-76cf5f1a258e
 
-
-
-
-
+Kabacoff, Robert I.2011. *R in Action: Data Analysis and Graphics with R* Manning Publications: Shelter Island, NY.
 
 
 
