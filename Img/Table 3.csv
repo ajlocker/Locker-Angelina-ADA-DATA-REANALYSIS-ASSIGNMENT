@@ -1,16 +1,16 @@
 Table 3. Descriptive statistics for ?18O composition of enamel from Tikal mandibular canines and third molars.,,,,
 Statistic,Canine ?18O (‰ PDB),,Molar ?18O (‰ PDB),
 ,Complete,Local,Complete,Local
-Mean,?2.89,?2.69,?3.31,?3.05
+Mean,-2.89,-2.69,-3.31,-3.05
 Standard deviation,1.04,0.83,1.26,0.89
 Count,87,77,54,47
-Minimum,?5.9,?4.36,?6.66,?4.93
-Maximum,?1.02,?1.1,?1.04,?1.95
+Minimum,-5.9,-4.36,-6.66,-4.93
+Maximum,-1.02,-1.1,-1.04,-1.95
 Variance,1.09,0.693,1.59,0.79
-Coefficient of variation,?0.36,?0.31,?0.38,?0.29
-Skewness (standard error),?.448 (.258),?0.103 (.274),?.89 (.33),?.74 (.35)
-Kurtosis (standard error),?.175 (.511),?0.747 (.541),?.17 (.64),?.65 (.68)
-Median,?2.79,?2.69,?2.88,?2.78
+Coefficient of variation,-0.36,-0.31,-0.38,-0.29
+Skewness (standard error),-.448 (.258),-0.103 (.274),-.89 (.33),-.74 (.35)
+Kurtosis (standard error),.175 (.511),-0.747 (.541),-.17 (.64),-.65 (.68)
+Median,-2.79,-2.69,-2.88,-2.78
 Mode,Multiple,Multiple,Multiple,Multiple
 Shapiro Wilk statistic,0.98,0.98,0.92,0.9
  Degrees of freedom,87,77,54,47

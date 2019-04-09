@@ -74,7 +74,7 @@ Next, I examine the destriptive statistics for strontium isotope ratios and oxyg
 
 To generate Table 2. we need to create multiple piplines using the %>% function. To get started (install if necessary and) load the {dplyr},{tidyverse}, and {e1071} packages. Eacy of these packages will help with descriptive stats. {dplyr} allows pipelines to be created to stream the data together in a single file. {e1071} carries the skewness and kurtosis statistics. 
 
-![Table. 2 - Wright (2012)](Img/Table 2.csv)
+![Table. 2 - Wright (2012)](Img/Table2.png)
 ```{r}
 library(dplyr)
 library(tidyverse)
@@ -142,7 +142,8 @@ SrShapiro
 
 Table 3. Canines and Molars (Repeat code from Table 2. However, use the Average.d18o.Canines and Average.d18o.Molars columns from the dataset)
 
-![Table. 3 - Wright (2012)](Img/Table 3.csv)
+![Table 4 - Wright (2012)](Img/Table3.png)
+
 ```{r}
 CaninesComplete <- d %>%
   select(Average.18O.canines) %>%
@@ -262,7 +263,7 @@ Generating a scatterplot with {ggplot2}: ggplot(data = , aes(x, y)) + geom_point
 
 ## References
 
-#Cheatsheet for R are probably the best think in my life these days...
+#Cheatsheets for R are probably the best thing in my life these days...
 
 dplyr cheatsheet: https://www.rstudio.com/resources/cheatsheets/
 

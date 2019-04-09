@@ -15,4 +15,4 @@ Median ,0.70811,0.70811,0.70812
 Mode ,0.70822,0.70822,0.70822
 Shapiro Wilk statistic ,0.447,0.968,0.985
 Degrees of freedom ,97,88,85
-Significance ,0.000,0.029,0.410
+Significance ,0,0.029,0.41
