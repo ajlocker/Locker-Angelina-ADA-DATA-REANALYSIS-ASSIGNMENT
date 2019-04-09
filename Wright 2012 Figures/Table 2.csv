@@ -1,0 +1,18 @@
+Table 2,,,
+Descriptive statistics for 87Sr/86Sr composition of Tikal mandibular canines and third molars.,,,
+,,,
+Statistic,Complete,Trimmed,Local
+Mean ,0.70805,0.7081,0.70812
+Standard deviation ,0.00113,0.00022,0.00019
+Count ,97,88,86
+Minimum ,0.71626,0.70751,0.70766
+Maximum ,0.71626,0.7085,0.7085
+Variance ,1.30E-06,4.70E-08,3.60E-08
+Coefficient of variation ,0.0016,0.00031,0.00027
+Skewness (standard error) ,2.689 (.245) ,-.604(.257) ,-.241 (.261)
+Kurtosis (standard error) ,32.2 (.485) ,.342 (.508) ,-.295 (.517)
+Median ,0.70811,0.70811,0.70812
+Mode ,0.70822,0.70822,0.70822
+Shapiro Wilk statistic ,0.447,0.968,0.985
+Degrees of freedom ,97,88,85
+Significance ,0.000,0.029,0.410
