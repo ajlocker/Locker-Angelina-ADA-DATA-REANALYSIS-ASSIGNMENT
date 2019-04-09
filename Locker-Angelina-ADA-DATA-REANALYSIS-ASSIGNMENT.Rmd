@@ -240,12 +240,6 @@ sro <- ggplot(d, aes(x = d$X87Sr.86Sr, y = d$Average.18O.canines, d$Average.18O.
 sro  # and, finally, we plot the object
 ```
 
-rubies  <- data.frame(carat = c(3, 4, 5), price= c(5000, 5000, 5000))
-
-ggplot(diamonds, aes(carat, price)) + 
-  geom_point() + 
-  geom_point(data = rubies, colour = "red")
-
 ## Summary
 Summary statistics using {dplyr}: summarise(), filter(), %>%
 
