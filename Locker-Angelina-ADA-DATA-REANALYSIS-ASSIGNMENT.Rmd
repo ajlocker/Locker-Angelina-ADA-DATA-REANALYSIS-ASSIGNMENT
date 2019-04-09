@@ -174,40 +174,28 @@ OShapiro
 Fig. 4 is two histograms comparing the distributions of averages of d18O from canines and molars with a normal distribution line plotted over them. 
 
 ```{r}
-par(mfrow = c(1,2)) #aligns them into a 1 by 2 grid
-x <- d$Average.18O.canines #I create a vetor for my data to help make the normal distribution line code easier.
-mx <- mean(x, na.rm = TRUE) # I use na.rm = TRUE because my data has many missing cells for various samples
-sdx <- sd(x, na.rm = TRUE)
-hx <- hist(x, 
-       breaks = 12, #I specify the number of bins I want R to create  
-       col = "red", 
-       main = " ",
-       xlab = bquote("Canine Average"~delta*'18O(\u2030PDB)'), #bquote() allows me to use greek letters in R. Note that '\u2030' generates the permille notation. ~ means there is a space. * means the delta should be right next to the 18. 
-       ylab = "Frequency", 
-       ylim = c(0,20), 
-       xlim = c(-7.0, -1),
-       probability = FALSE)
-xfit <- seq(min(frequency(x)), max(frequency(x)), 6) 
-yfit <- dnorm(xfit, mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
-yfit <- yfit*diff(hx$mids[1:2])*length(x)
-lines(xfit, yfit, col = "blue", lwd = 2)
 
-y <- d$Average.18O.molars
-my <- mean(y)
-sdy <- sd(y)
-hy <- hist(y, 
-           breaks = 11, 
-           col = "red", 
-           main = " ", 
-           xlab = bquote("Third Molar Average"~delta*'18O(\u2030PDB)'), 
-           ylab = "Frequency", 
-           ylim = c(0,12), 
-           xlim = c(-7.0, -1), 
-           probability = FALSE)
-xfit <- seq(min(frequency(y)), max(frequency(y)), 6) 
-yfit <- dnorm(xfit, mean = mean(y, na.rm = TRUE), sd = sd(y, na.rm = TRUE))
-yfit <- yfit*diff(hx$mids[1:2])*length(y)
-lines(xfit, yfit, col = "blue", lwd = 2)
+ggplot(data = d, aes(d$Average.18O.canines, na.rm = TRUE)) + 
+  geom_histogram(aes(y = ..density..),
+                 na.rm = TRUE, 
+                 breaks = seq(0, 12, by = 0.5),
+                 col = "red",
+                 fill = "red") +
+  labs(x = "Canine Average"~delta*'18O(\u2030PDB)', y = "Frequency") +
+  xlim(c(-7.0, -1.0)) + 
+  ylim(c(0,20)) 
+
+ggplot(data = d, aes(d$Average.18O.molars, na.rm = TRUE)) + 
+  geom_histogram(aes(y = ..density..), 
+                 na.rm = TRUE, 
+                 breaks = seq(0, 12, by = 0.5),
+                 col = "red",
+                 fill = "red") +
+  labs(x = "Third Molar Average"~delta*'18O(\u2030PDB)', y = "Frequency") +
+  xlim(c(-7.0, -1.0)) + 
+  ylim(c(0,12))
+
+
 
 ```
 
