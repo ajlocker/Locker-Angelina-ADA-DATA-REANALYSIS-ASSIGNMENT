@@ -129,7 +129,6 @@ SrStats
 I couldn't figure out how to sync up my dplyr tables with the Shapiro-Wilk test, so I'm just doing them separately. Sorry!
 
 ```{r}
-
 SrCompShapiro <- shapiro.test(d$X87Sr.86Sr)
 SrLocalShapio <- shapiro.test(d$X87Sr.86Sr)
 

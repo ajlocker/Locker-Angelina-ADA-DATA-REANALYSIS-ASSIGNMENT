@@ -183,7 +183,7 @@ dataset.
 \end{Shaded}
 
 \begin{verbatim}
-## -- Attaching packages ------------------------------------------------------------------------------- tidyverse 1.2.1 --
+## -- Attaching packages ------------------------------------------------------------------------------ tidyverse 1.2.1 --
 \end{verbatim}
 
 \begin{verbatim}
@@ -194,7 +194,7 @@ dataset.
 \end{verbatim}
 
 \begin{verbatim}
-## -- Conflicts ---------------------------------------------------------------------------------- tidyverse_conflicts() --
+## -- Conflicts --------------------------------------------------------------------------------- tidyverse_conflicts() --
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()
 \end{verbatim}
@@ -270,7 +270,7 @@ compares the Time Period (or Date) of the burials to 87Sr/86Sr. Load
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Locker-Angelina-ADA-DATA-REANALYSIS-ASSIGNMENT_files/figure-latex/unnamed-chunk-2-1.pdf}
+\includegraphics{img/unnamed-chunk-2-1.pdf}
 
 Next, I examine the destriptive statistics for strontium isotope ratios
 and oxygen isotope ratios. Wright provides three columns in her tables.
@@ -304,6 +304,8 @@ carries the skewness and kurtosis statistics.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\CommentTok{#The Mode() function in baseR tells you the class of an object. The get the mathematical mode (or the most frequent number), we have to create our own function: }
+
 \NormalTok{Mode <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}
     \ControlFlowTok{if}\NormalTok{ (}\KeywordTok{is.numeric}\NormalTok{(x)) \{}
 \NormalTok{        x_table <-}\StringTok{ }\KeywordTok{table}\NormalTok{(x)}
@@ -311,9 +313,10 @@ carries the skewness and kurtosis statistics.
 \NormalTok{    \}}
 \NormalTok{\}}
 
+\CommentTok{#Now we can build our descriptive statistics pipeline. }
 \NormalTok{SrComplete <-}\StringTok{ }\NormalTok{d }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{select}\NormalTok{(X87Sr.86Sr) }\OperatorTok{%>%}
-\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(X87Sr.86Sr, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{),}
+\StringTok{  }\KeywordTok{select}\NormalTok{(X87Sr.86Sr) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#here I am telling R which column from my dataset to pull from}
+\StringTok{  }\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{mean =} \KeywordTok{mean}\NormalTok{(X87Sr.86Sr, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{), }\CommentTok{#now I can go through and put in the statistical parameters I want}
             \DataTypeTok{sd =} \KeywordTok{sd}\NormalTok{(X87Sr.86Sr, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{),}
             \DataTypeTok{count =} \KeywordTok{length}\NormalTok{(}\KeywordTok{na.omit}\NormalTok{(X87Sr.86Sr)),}
             \DataTypeTok{min =} \KeywordTok{min}\NormalTok{(X87Sr.86Sr, }\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{), }
@@ -437,19 +440,20 @@ Average.d18o.Canines and Average.d18o.Molars columns from the dataset)
 
 Fig. 4 is two histograms comparing the distributions of averages of d18O
 from canines and molars with a normal distribution line plotted over
-them.
+them. We can use \{ggplot2\} for shortened code. Note: I'm still not
+sure why my distribution lines a plotting so small.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ d, }\KeywordTok{aes}\NormalTok{(d}\OperatorTok{$}\NormalTok{Average.18O.canines)) }\OperatorTok{+}\StringTok{ }
-\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{,}
-                 \DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{7}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.5}\NormalTok{),}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ d, }\KeywordTok{aes}\NormalTok{(d}\OperatorTok{$}\NormalTok{Average.18O.canines)) }\OperatorTok{+}\StringTok{ }\CommentTok{#tells us our data to pull from}
+\StringTok{  }\KeywordTok{geom_histogram}\NormalTok{(}\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{, }\CommentTok{#which type of plot we'll be using and the parameters}
+                 \DataTypeTok{breaks =} \KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{7}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.5}\NormalTok{), }\CommentTok{#I've used binwidth() and bins() along with breaks() to make my bins fall on whole numbers. If I don't use breaks() then the histogram plots on half numbers for the x-axis tick marks, rather than whole numbers. }
                  \DataTypeTok{binwidth =} \FloatTok{0.5}\NormalTok{,}
                  \DataTypeTok{bins =} \DecValTok{15}\NormalTok{,}
                  \DataTypeTok{col =} \StringTok{"blue"}\NormalTok{,}
                  \DataTypeTok{fill =} \StringTok{"red"}\NormalTok{, }
-                 \DataTypeTok{probability =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_density}\NormalTok{(}\DataTypeTok{col=} \StringTok{"green"}\NormalTok{) }\OperatorTok{+}
+                 \DataTypeTok{probability =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_density}\NormalTok{(}\DataTypeTok{col=} \StringTok{"green"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{#this creates the normal distribution line. }
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Canine Average"}\OperatorTok{~}\NormalTok{delta}\OperatorTok{*}\StringTok{'18O(\textbackslash{}u2030PDB)'}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Frequency"}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{xlim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\FloatTok{7.0}\NormalTok{, }\FloatTok{0.0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{ylim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{20}\NormalTok{)) }
@@ -464,7 +468,7 @@ them.
 ## Warning: Removed 44 rows containing non-finite values (stat_density).
 \end{verbatim}
 
-\includegraphics{Locker-Angelina-ADA-DATA-REANALYSIS-ASSIGNMENT_files/figure-latex/unnamed-chunk-7-1.pdf}
+\includegraphics{img/unnamed-chunk-7-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -475,9 +479,9 @@ them.
                  \DataTypeTok{bins =} \DecValTok{10}\NormalTok{,}
                  \DataTypeTok{col =} \StringTok{"blue"}\NormalTok{,}
                  \DataTypeTok{fill =} \StringTok{"red"}\NormalTok{,}
-                 \DataTypeTok{probability =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}
+                 \DataTypeTok{probability =} \OtherTok{FALSE}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_density}\NormalTok{(}\DataTypeTok{col=}\StringTok{"green"}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Third Molar Average"}\OperatorTok{~}\NormalTok{delta}\OperatorTok{*}\StringTok{'18O(\textbackslash{}u2030PDB)'}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Frequency"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Third Molar Average"}\OperatorTok{~}\NormalTok{delta}\OperatorTok{*}\StringTok{'18O(\textbackslash{}u2030PDB)'}\NormalTok{, }\DataTypeTok{y =} \StringTok{"Frequency"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\CommentTok{#Note: the \textbackslash{}u2030 is code for the permille symbol. ~delta* notes that there should be a space after "Average", then a small delta symbol with no space between it and the 18. }
 \StringTok{  }\KeywordTok{xlim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\FloatTok{7.0}\NormalTok{, }\FloatTok{0.0}\NormalTok{)) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{ylim}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{12}\NormalTok{))}
 \end{Highlighting}
@@ -491,18 +495,15 @@ them.
 ## Warning: Removed 71 rows containing non-finite values (stat_density).
 \end{verbatim}
 
-\includegraphics{Locker-Angelina-ADA-DATA-REANALYSIS-ASSIGNMENT_files/figure-latex/unnamed-chunk-7-2.pdf}
+\includegraphics{img/unnamed-chunk-7-2.pdf}
 
 Fig. 5 = QQ Plots of oxygen isotope data using \{ggplot2\}
 
-df \textless{}- data.frame(y = rt(200, df = 5)) p \textless{}-
-ggplot(df, aes(sample = y)) p + stat\_qq() + stat\_qq\_line()
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{qc <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{sample =}\NormalTok{ d}\OperatorTok{$}\NormalTok{Average.18O.canines)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{stat_qq}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{stat_qq_line}\NormalTok{() }\OperatorTok{+}
+\NormalTok{qc <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{sample =}\NormalTok{ d}\OperatorTok{$}\NormalTok{Average.18O.canines)) }\OperatorTok{+}\StringTok{ }\CommentTok{#tells us which data to pull from}
+\StringTok{  }\KeywordTok{stat_qq}\NormalTok{() }\OperatorTok{+}\StringTok{ }\CommentTok{#type of plot}
+\StringTok{  }\KeywordTok{stat_qq_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\CommentTok{#adds the expected line}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Canine QQ"}\NormalTok{)}
 
 \NormalTok{qm <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{sample =}\NormalTok{ d}\OperatorTok{$}\NormalTok{Average.18O.molars)) }\OperatorTok{+}
@@ -522,7 +523,7 @@ ggplot(df, aes(sample = y)) p + stat\_qq() + stat\_qq\_line()
 ## Warning: Removed 44 rows containing non-finite values (stat_qq_line).
 \end{verbatim}
 
-\includegraphics{Locker-Angelina-ADA-DATA-REANALYSIS-ASSIGNMENT_files/figure-latex/unnamed-chunk-8-1.pdf}
+\includegraphics{img/unnamed-chunk-8-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -538,9 +539,10 @@ ggplot(df, aes(sample = y)) p + stat\_qq() + stat\_qq\_line()
 ## Warning: Removed 71 rows containing non-finite values (stat_qq_line).
 \end{verbatim}
 
-\includegraphics{Locker-Angelina-ADA-DATA-REANALYSIS-ASSIGNMENT_files/figure-latex/unnamed-chunk-8-2.pdf}
+\includegraphics{img/unnamed-chunk-8-2.pdf}
 
-Fig. 6
+Fig. 6 Finally, We will plot a multivariate scatterplot comparing
+strontium isotope ratios to oxygen isotope ratios using \{ggplot2\}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -548,17 +550,11 @@ Fig. 6
 \NormalTok{sro <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(d, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ d}\OperatorTok{$}\NormalTok{X87Sr.86Sr, }\DataTypeTok{y =}\NormalTok{ d}\OperatorTok{$}\NormalTok{Average.18O.canines, d}\OperatorTok{$}\NormalTok{Average.18O.molars), }\KeywordTok{colours}\NormalTok{(}\DataTypeTok{distinct =} \OtherTok{TRUE}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\CommentTok{# Data tells you which file to pull from; aes lets you set up your x,y plot.                           }
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{na.rm =} \OtherTok{TRUE}\NormalTok{) }\OperatorTok{+}\StringTok{ }
 \StringTok{  }\KeywordTok{xlab}\NormalTok{(}\StringTok{"87Sr/86Sr"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{'d18O(\textbackslash{}u2030PDB)'}\NormalTok{)}
-\NormalTok{sro  }\CommentTok{# and, finally, we plot the object}
+\NormalTok{sro  }\CommentTok{# and, finally, we plot}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Locker-Angelina-ADA-DATA-REANALYSIS-ASSIGNMENT_files/figure-latex/unnamed-chunk-9-1.pdf}
-
-rubies \textless{}- data.frame(carat = c(3, 4, 5), price= c(5000, 5000,
-5000))
-
-ggplot(diamonds, aes(carat, price)) + geom\_point() + geom\_point(data =
-rubies, colour = ``red'')
+\includegraphics{img/unnamed-chunk-9-1.pdf}
 
 \subsection{Summary}\label{summary}
 
